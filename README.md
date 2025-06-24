@@ -39,22 +39,8 @@ Input sanitation, validation and CSP is also implemented.
 
 ## Scalability
 
-In order to make the services in the stack scalable two load balancers were implemented using Ngix as a reverse proxy and Docker's hostname resolution. This way when external requests come to the external balancer it's passed to the `classifier-interface` service instances which performs authentication, validation and sanitation and then it forwards a image inference request to the internal load balancer that distributes the requests between the `classifier` instances as seen bellow:
-
-![Architecture](images/architecture.PNG?raw=true "Architecture")
+In order to make the services in the stack scalable two load balancers were implemented using Ngix as a reverse proxy and Docker's hostname resolution. This way when external requests come to the external balancer it's passed to the `classifier-interface` service instances which performs authentication, validation and sanitation and then it forwards a image inference request to the internal load balancer that distributes the requests between the `classifier` instances.
 
 ### Load tests
 
 The following three load tests were performed against the services. As it can be noticed, scaling up the number of `classifier` instances improve RPS processed and P50/P95 response. For at least 2 `classifier` instances adding a second `classifier-interface` didn't have a noticeble benefit. More hardware resources are needed for testing the stack with more instances, but as it can be noticed here and as it should be expected, the `classifier` service is doing most of the heavy-lifting and there should be more instances of it than `classifier-interface` if we want to serve more requests.
-
-#### 1 Interface / 1 classifier
-
-![1 Interface / 1 classifier](images/loadtest_20users_1interface_1classifier_5minutes.PNG?raw=true "1 Interface / 1 classifier")
-
-#### 1 Interface / 2 classifiers
-
-![1 Interface / 2 classifiers](images/loadtest_20users_1interface_2classifier_5minutes.PNG?raw=true "1 Interface / 2 classifiers")
-
-#### 2 Interfaces / 2 classifiers
-
-![2 Interfaces / 2 classifiers](images/loadtest_20users_2interface_2classifier_5minutes.PNG?raw=true "2 Interface / 2 classifiers")
